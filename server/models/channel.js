@@ -1,8 +1,8 @@
 const SYSTEM_USER = 'system';
 
 const SYSTEM_MESSAGES = {
-  JOIN: '%user% has joined the channel',
-  LEFT: '%user% has left the channel',
+  JOIN: '%username% has joined the channel',
+  LEFT: '%username% has left the channel',
 }
 
 const MESSAGE_TYPE = {
@@ -15,40 +15,48 @@ class Channel {
   constructor() {
     this._conectionsMap = [];
   }
-  addUser(user, connection) {
-    this._conectionsMap[user] = connection;
+
+  /** Add username connection in channel
+    * @param {string} username
+    * @param {object} connection
+   */
+  addUser(username, connection) {
+    this._conectionsMap[username] = connection;
   }
-  createUser() {
-    return 'user' + Math.random().toString(36).substr(2, 6);
+
+  /** Create unique username name
+   */
+  createUserName() {
+    return 'username' + Math.random().toString(36).substr(2, 6);
   }
-  onUserLeft(user) {
-    delete this._conectionsMap[user];
+  onUserLeft(username) {
+    delete this._conectionsMap[username];
     const leftMessage = {
       type: MESSAGE_TYPE.MESSAGE,
-      text: SYSTEM_MESSAGES.LEFT.replace('%user%', user),
-      user: SYSTEM_USER,
+      text: SYSTEM_MESSAGES.LEFT.replace('%username%', username),
+      username: SYSTEM_USER,
     };
     this._notifyUsers(leftMessage);
   }
-  onUserJoin(user) {
+  onUserJoin(username) {
     const joinMessage = {
       type: MESSAGE_TYPE.MESSAGE,
-      text: SYSTEM_MESSAGES.JOIN.replace('%user%', user),
-      user,
+      text: SYSTEM_MESSAGES.JOIN.replace('%username%', username),
+      username: SYSTEM_USER,
     };
     this._notifyUsers(joinMessage);
   }
-  onMessageReceived(user, message) {
+  onMessageReceived(username, message) {
     const newMessage = {
       ...message,
-      user,
+      username,
     };
     this._notifyUsers(newMessage);
   }
-  sendWelcomeMessage(user, connection) {
+  sendWelcomeMessage(username, connection) {
     const userMessage = {
       type: MESSAGE_TYPE.WELCOME,
-      user,
+      username,
     };
     this._send(connection, userMessage);
   }

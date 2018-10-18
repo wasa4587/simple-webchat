@@ -24,17 +24,17 @@ const channel = new Channel();
 wsServer.on('request', (request) => {
   const connection = request.accept(null, request.origin);
 
-  const user = channel.createUser();
-  channel.addUser(user, connection);
-  channel.sendWelcomeMessage(user, connection);
-  channel.onUserJoin(user);
+  const username = channel.createUserName();
+  channel.addUser(username, connection);
+  channel.sendWelcomeMessage(username, connection);
+  channel.onUserJoin(username);
 
   connection.on('message', (message) => {
     if (message.type === 'utf8') {
-      channel.onMessageReceived(user, JSON.parse(message.utf8Data));
+      channel.onMessageReceived(username, JSON.parse(message.utf8Data));
     }
   });
   connection.on('close', (connection) => {
-    channel.onUserLeft(user);
+    channel.onUserLeft(username);
   });
 });
