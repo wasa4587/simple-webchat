@@ -13,7 +13,7 @@ server.listen(1337, () => {
   console.log((new Date()) + ' Server is listening on port 8080');
 });
 
-// create the server
+// create the websocket server
 const wsServer = new WebSocketServer({
   httpServer: server
 });
