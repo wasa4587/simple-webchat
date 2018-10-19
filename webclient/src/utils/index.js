@@ -10,7 +10,6 @@ export function mapStateToProps(state) {
   };
 }
 
-
 /**
  * Map actions to component props
  */

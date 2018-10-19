@@ -12,7 +12,18 @@ export const MESSAGE_TYPE = {
 }
 
 const TYPING_TIMEOUT = 3000;
+
+/**
+  * Get the ws object from the state
+  * @param {object} state
+ */
+
 const getWs = (state) => state.ws;
+
+/**
+  * called every ms, used to delay an action for ms time
+  * @param {number} ms
+ */
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 
@@ -25,6 +36,10 @@ const send = (ws, message) => {
   ws.send(JSON.stringify(message));
 }
 
+/**
+  * Connect to websocket server and emit actions when messages arrives
+  * @param {string} serverUrl
+ */
 function initWebsocket(serverUrl) {
   return eventChannel(emitter => {
     let ws = new WebSocket(serverUrl);
@@ -58,6 +73,10 @@ function initWebsocket(serverUrl) {
   })
 }
 
+/**
+  * Connect to websocket server and listen all events from it
+  * @param {object} action
+ */
 function* wsConnectServer(action) {
   const channel = yield call(initWebsocket, action.serverUrl)
   while (true) {
@@ -66,6 +85,10 @@ function* wsConnectServer(action) {
   }
 }
 
+/**
+  * send message
+  * @param {object} action
+ */
 function* wsSendMessage(action) {
   let ws = yield select(getWs);
   var message = {
@@ -77,7 +100,10 @@ function* wsSendMessage(action) {
   yield put({type: ACTIONS.WS_SEND_MESSAGE_SUCCESS});
 }
 
-
+/**
+  * send typing indicator
+  * @param {object} action
+ */
 function* wsSendTyping(action) {
   let ws = yield select(getWs);
   var message = {
@@ -89,9 +115,9 @@ function* wsSendTyping(action) {
 
 
 /**
-  * Update typing indicator
+  * after TYPING_TIMEOUT clear typeing list,
+  * it can be cancelled if multiple typing message arrives
   * @param {string} username
-  * @private
  */
 function * wsTypingReceived(username) {
   yield call(delay, TYPING_TIMEOUT)
@@ -100,10 +126,9 @@ function * wsTypingReceived(username) {
 
 
 /*
-  Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
-  Allows concurrent fetches of user.
-*/
-export function* wsSaga(serverUrl) {
+ * binds actions to generators
+ */
+export function* wsSaga() {
   yield takeEvery(ACTIONS.WS_CONNECT_SERVER, wsConnectServer);
   yield takeEvery(ACTIONS.WS_SEND_MESSAGE, wsSendMessage);
   yield takeEvery(ACTIONS.WS_SEND_TYPING, wsSendTyping);
