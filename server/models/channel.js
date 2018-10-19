@@ -9,22 +9,13 @@ const MESSAGE_TYPE = {
   TYPING: 'typing',
   MESSAGE: 'message',
   WELCOME: 'welcome',
+  USER_LIST: 'user_list',
 }
 
 class Channel {
-  
+
   constructor() {
     this._conectionsMap = [];
-  }
-
-  /**
-    * Add username connection in channel
-    * @param {string} username
-    * @param {object} connection
-    * @public
-   */
-  addUser(username, connection) {
-    this._conectionsMap[username] = connection;
   }
 
   /**
@@ -48,6 +39,7 @@ class Channel {
       username: SYSTEM_USER,
     };
     this._notifyUsers(leftMessage);
+    this._sendUserListUpdate();
   }
 
   /**
@@ -55,13 +47,15 @@ class Channel {
     * @param {string} username
     * @public
    */
-  onUserJoin(username) {
+  onUserJoin(username, connection) {
+    this._conectionsMap[username] = connection;
     const joinMessage = {
       type: MESSAGE_TYPE.MESSAGE,
       text: SYSTEM_MESSAGES.JOIN.replace('%username%', username),
       username: SYSTEM_USER,
     };
     this._notifyUsers(joinMessage);
+    this._sendUserListUpdate();
   }
 
   /**
@@ -90,6 +84,19 @@ class Channel {
       username,
     };
     this._send(connection, userMessage);
+  }
+
+  /**
+    * Send user list updates
+    * @private
+   */
+  _sendUserListUpdate() {
+    const userListMessage = {
+      type: MESSAGE_TYPE.USER_LIST,
+      username: SYSTEM_USER,
+      users: Object.keys(this._conectionsMap),
+    };
+    this._notifyUsers(userListMessage);
   }
 
   /**

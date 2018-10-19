@@ -25,9 +25,8 @@ wsServer.on('request', (request) => {
   const connection = request.accept(null, request.origin);
 
   const username = channel.createUserName();
-  channel.addUser(username, connection);
+  channel.onUserJoin(username, connection);
   channel.sendWelcomeMessage(username, connection);
-  channel.onUserJoin(username);
 
   connection.on('message', (message) => {
     if (message.type === 'utf8') {
