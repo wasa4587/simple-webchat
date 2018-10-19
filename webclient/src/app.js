@@ -3,10 +3,9 @@ import {
   MessageList,
   UserList,
   NewMessage,
-  ShouldMessageListChangedWrapper
 } from './components';
-
-import { ConnectWsServerWrapper } from './connect-ws-server-wrapper';
+import { CONFIG } from './config';
+import { ConnectWsServerWrapper, UpdateComponenWhenMessageChangesWrapper } from './wrappers';
 
 import { connect } from 'react-redux';
 import {
@@ -19,8 +18,8 @@ import './app.scss';
 /**
  * Example of wrapping a HOC component
  */
-const WrappedMessageList = ShouldMessageListChangedWrapper(MessageList);
-const WrappedApp = ConnectWsServerWrapper(App);
+const WrappedMessageList = UpdateComponenWhenMessageChangesWrapper(MessageList);
+const WrappedApp = ConnectWsServerWrapper(App, CONFIG);
 
 
 export function App(props) {

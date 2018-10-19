@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 
-export function ShouldMessageListChangedWrapper(WrappedComponent) {
+export function UpdateComponenWhenMessageChangesWrapper(WrappedComponent) {
   return class extends Component {
     shouldComponentUpdate(nextProps) {
       return nextProps.messages.length !== this.props.messages.length;
