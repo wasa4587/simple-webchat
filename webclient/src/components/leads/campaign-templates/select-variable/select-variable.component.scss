@@ -1,0 +1,105 @@
+.assign-container {
+  display: inline-block;
+  .buttons-container {
+    display: inline-block;
+    vertical-align: middle;
+    // margin-left: 35px;
+    margin-right: 10px;
+    color: #6F6F6F;
+    button {
+      &:first-child {
+        line-height: 1.1;
+      }
+      &:last-child {
+        margin-top: 11px;
+        line-height: 1.8;
+      }
+       height: 27px;
+       width: 30px;
+       border: 1px solid #9AA5AD;
+       border-radius: 3px;
+       display: block;
+       color: #6F6F6F;
+       cursor: pointer;
+       &:hover {
+          border: 1px solid #0075CD;
+          color: #0075CD;
+       }
+    }
+  }
+  .group-container {
+    display: inline-block;
+    vertical-align: middle;
+    .title {
+       height: 20px;
+       width: 100%;
+       border-radius: 3px;
+       background-color: #EDF0F4;
+       color: #002C50;
+       font-family: "SF UI Text";
+       font-size: 10px;
+       font-weight: bold;
+       line-height: 20px;
+       text-align: center;
+       text-transform: uppercase;
+    }
+    .list-container {
+       margin-top: 7px;
+       height: 440px;
+       width: 100%;
+       border: 0.75px solid #9AA5AD;
+       border-radius: 3px;
+       background-color: #FFFFFF;
+       .search-bar {
+         height: 24px;
+         width: 235px;
+         border: 1px solid #C1C1C1;
+         background-color: #FFFFFF;
+         margin: 5px;
+         input {
+           background: #FFFFFF;
+           height: 100%;
+           width: calc( 100% - 20px);
+           border: 0px;
+           vertical-align: middle;
+           display: inline-block;
+           &:focus {
+             outline: none;
+           }
+         }
+         i {
+     	    height: 15px;
+           width: 12px;
+           color: #707070;
+           font-size: 15px;
+           font-weight: 500;
+           line-height: 16px;
+         }
+       }
+       .options-container {
+         padding-left: 4px;
+         padding-right: 4px;
+         overflow-y: auto;
+         height: calc(100% - 35px);
+         .option {
+           padding-left: 9px;
+           padding-right: 9px;
+           height: 21px;
+           color: #6F6F6F;
+           font-family: "Quattrocento Sans";
+           font-size: 14px;
+           line-height: 21px;
+           cursor: pointer;
+           &:hover {
+             background-color: #F2F2F2;
+           }
+           &.active {
+             color: #ffffff;
+             background-color: #0088ff;
+           }
+         }
+       }
+    }
+  }
+
+}

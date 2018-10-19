@@ -1,0 +1,46 @@
+
+.dateRangeDropdown {
+  border: 0.75px solid #e9ecef;
+  width: 470px;
+  display: inline-block;
+  position: absolute;
+  background: #fff;
+  border-radius: 5px;
+  z-index: 1;
+}
+.dateRangeRadio {
+  margin: 5px 0px 0px 10px;
+}
+.toDateRange {
+  margin: 0px 8px;
+  float: left;
+}
+.dateRangeDateinput {
+  width: 35%;
+  float: left;
+  border-radius: 8px;
+}
+.dateRangeRadioDate {
+  margin: 10px;
+  float: left;
+}
+.displayfilter {
+  float: left;
+  line-height: 24px;
+  border-bottom: 1.5px dotted #000000;
+}
+.cursor {
+  cursor: pointer;
+  color: #000000;
+  font-family: "SF UI Text";
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 14px;
+  margin-right: 10px;
+}
+.custome-material-icon {
+  font-size: 21px;
+}
+.daterange-container {
+  position: relative;
+}

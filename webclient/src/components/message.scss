@@ -1,0 +1,21 @@
+
+
+.message {
+  font-size: 12px;
+  background-color: #efefef;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  &.you {
+    background-color: #169CE2;
+    color: #fff;
+  }
+  &.system {
+    background-color: #FF900C;
+    color: #fff;
+  }
+  .title {
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+}

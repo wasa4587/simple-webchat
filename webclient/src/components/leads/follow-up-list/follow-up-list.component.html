@@ -1,0 +1,170 @@
+<content-area>
+  <span class='lead-follow-header' header>Leads</span>
+  <div class='row expanded' header>
+    <div class='small-12'>
+      <div class='ui-kit tabs lead-follow-tabs'>
+        <div class='tab-push'></div>
+        <tooltip
+          tooltipText="A list of follow-ups<br> to be completed"
+          tooltipColor='rgba(14, 45, 82, 0.8)'
+          tooltipTextColor='white'
+          position='bottom-sidebar-lists'
+        >
+          <a [routerLink]="['/v2/lead/follow-up-list']" class='first tab' [routerLinkActive]="['active']">
+            <span class='first-line'>Follow-ups</span>
+          </a>
+        </tooltip>
+        <tooltip
+          tooltipText="A list of all leads"
+          tooltipColor='rgba(14, 45, 82, 0.8)'
+          tooltipTextColor='white'
+          position='bottom-sidebar-lists'
+        >
+          <a [routerLink]="['/v2/lead/all']" class='tab all'[routerLinkActive]="['active']">
+            <span>All</span>
+          </a>
+        </tooltip>
+      </div>
+    </div>
+  </div>
+  <div body>
+    <div class="row">
+      <div class='new-design-filter row expanded'>
+        <div class='search-container search'>
+          <input type='search' class='grey' placeholder='Search by name,phone,unit,ID...' [(ngModel)]='searchValue'/>
+        </div>
+        <span class="filter-static-word showing">Showing</span>
+        <!-- <div class='dropdownFilter channel-dropdown'>
+          <tooltip [tooltipText]="selectedChannel" tooltipColor='rgba(14, 45, 82, 0.8)' tooltipTextColor='white' position='bottom'>
+            <ss-multiselect-dropdown name="dropdownChannels" [options]='dropdownChannels' [texts]='channelMultiSelectTexts' [settings]='channelMultiSelectSettings'
+              [(ngModel)]='channelMultiSelectSelectedOptions' (ngModelChange)='getDropdownSelectedChannel($event)'>
+            </ss-multiselect-dropdown>
+          </tooltip>
+        </div> -->
+        <div class='dropdownFilter custom-width'>
+          <tooltip [tooltipText]="selectedLocation" tooltipColor='rgba(14, 45, 82, 0.8)' tooltipTextColor='white' position='top'>
+            <ss-multiselect-dropdown name="dropdownLocations" [options]='dropdownLocations' [texts]='locationMultiSelectTexts' [settings]='locationMultiSelectSettings'
+              [(ngModel)]='locationMultiSelectSelectedOptions' (ngModelChange)='getDropdownSelectedLocation($event)'
+              (dropdownClosed)="onFilterChange(locationMultiSelectSelectedOptions)" >
+            </ss-multiselect-dropdown>
+          </tooltip>
+        </div>
+        <span class="filter-static-word from">from</span>
+        <daterange-filter [dateRange]="dateRange" (onSelectionChange)="onSelectionChange($event)" (onSelectionDateRange)="onSelectionDateRange($event)"></daterange-filter>
+        <div class="customFilterDisplay">
+          <filter-dropdown [refresh]="refresh" selectMessage="Filter" [options]="customFilterOption" (filterSelected)="filterSelected($event)" (filterRemoved)="filterRemoved($event)"></filter-dropdown>
+        </div>
+        <button class="apply-button" (click)="getInfo()">Apply</button>
+        <button class="reset-button" (click)="resetFilter()">Reset</button>
+      </div>
+    </div>
+    <div class='row expanded paginationDiv'>
+      <div class='small-5 columns small-offset-7 follow-up-pagination-container'>
+        <pagination-component
+          (elementsPerPage)="onPerPageChange($event)"
+          (previousPage)="onPreviousPage($event)"
+          (nextPage)="onNextPage($event)"
+          (validInputValue)="onPageChange($event)"
+          [currentPage]="page===false?1:page"
+          [totalOfPages]="totalPages"
+          [dropdownDefault]="parPage"
+          [hidden]='loading || notData'
+          >
+        </pagination-component>
+      </div>
+    </div>
+    <div class='row expanded'>
+      <div class='small-12'>
+        <div *ngIf='loading' class='small-12 loading-container'>
+          <loading
+            *ngIf='loading'
+            title='Loading'
+            message='Please be patient as more detailed reports may take longer to load than others'>
+          </loading>
+        </div>
+        <p *ngIf='notData' class='no-data-message small-12 columns'>
+          <span>There is no data available for the selected filters. Please change your selection.</span>
+        </p>
+        <table class='ui-kit' *ngIf='!loading && !notData'>
+          <tr>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "next_followup_date")'>DATE</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "next_followup_date"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "next_followup_date"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "location")'>LOCATION</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "location"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "location"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "first_name")'>FIRST NAME</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "first_name"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "first_name"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "last_name")'>LAST NAME</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "last_name"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "last_name"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "followup_rule_type")'>TYPE</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "followup_rule_type"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "followup_rule_type"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "phone")'>PHONE</div>
+              <!-- <div *ngIf='orderedBy === "AMOUNT"' class="arrow-container"> -->
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "phone"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "phone"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "followups")'>FOLLOW UPS</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "followups"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "followups"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th class='sorted'>
+              <div class="title" (click)='arrowStatusChange(arrowStatus, "days")'>DAYS PAST DUE</div>
+              <i *ngIf='arrowStatus === "asc" && columnSelected === "days"' class="webfont webfont-keyboard_arrow_up_black"></i>
+              <i *ngIf='arrowStatus === "desc" && columnSelected === "days"' class="webfont webfont-keyboard_arrow_down_black"></i>
+            </th>
+            <th>
+              <div class="title">OPEN</div>
+            </th>
+          </tr>
+          <tr *ngFor ='let followUp of followUpList; let i = index;'>
+            <td>
+              <span>{{followUp.next_followup_date  | date :'yyyy-MM-dd'}}</span>
+            </td>
+            <td>
+              <span>{{followUp.location}}</span>
+            </td>
+            <td>
+              <span>{{followUp.first_name}}</span>
+            </td>
+            <td>
+              <span>{{followUp.last_name}}</span>
+            </td>
+            <td>
+              <span>{{followUp.followup_rule_type}}</span>
+            </td>
+            <td>
+              <span>{{followUp.phone}}</span>
+            </td>
+            <td>
+              <span>{{followUp.followups}}</span>
+            </td>
+            <td>
+              <span>{{followUp.days}}</span>
+            </td>
+            <td>
+              <span>
+                <p class="navigate" (click)="goToLeadCard(followUp)">Open</p>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</content-area>

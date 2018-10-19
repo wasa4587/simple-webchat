@@ -1,0 +1,69 @@
+<div class="row marginTop20">
+    <div class='small-12 medium-12 large-12'>
+        <div class='row'>
+            <div class='small-4 columns marginTopBottom20'>
+                <b>Inventory Details</b>
+            </div>
+        </div>
+    </div>
+    <div class='small-12 medium-12 large-12'>
+        <div class='row'>
+            <div class='small-4 columns marginTopBottom20'>
+                <select class="height32" name='inventoryType' (change)="inventoryTypeChange($event)" [(ngModel)]="inventoryType">
+                    <option value=''>--Select Inventory Type--</option>
+                    <option *ngFor="let item of inventoryItemArray" [ngValue]='item.type_id'>{{item.type_name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row marginTop20 tables call-route-grid-table">
+    <div class='small-8 medium-8 large-8 tableDiv'>
+        <form [formGroup]="itemsForm">
+            <table formArrayName="itemsProperties">
+                <tr class='headers-row'>
+                    <th></th>
+                    <th>Item Name</th>
+                    <th>Qty Total</th>
+                    <th>Qty Avail</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+                <tr *ngFor="let item of itemsProperties.controls; let i = index;" [formGroupName]="i">
+                    <td>
+                        <!-- <img *ngIf="i!=0" class="priorityButton priority-up" (click)="onUpdatePriority(i,'up')" src="assets/img/up_arrow_16.ico">
+                        <img *ngIf="(itemsProperties.controls.length-1)!=i" class="priorityButton priority-down" (click)="onUpdatePriority(i,'down')"
+                            src="assets/img/down_arrow_16.ico"> -->
+
+                      <i *ngIf="i!=0" class="priorityButton priority-up" (click)="onUpdatePriority(i,'up')" class="webfont webfont-unarchive_black priority-up"></i>
+                      <i *ngIf="(itemsProperties.controls.length-1)!=i" (click)="onUpdatePriority(i,'down')" class="webfont webfont-archive_black priority-down"></i>
+                    </td>
+                    <td>
+                        <input type="text" formControlName="item_name" placeholder="Item name" />
+                    </td>
+
+                    <td>
+                        <input type="text" (keypress)="onlyNumber($event)" formControlName="qty_total" placeholder="Qty total" />
+                    </td>
+                    <td>
+                        <input type="text" (keypress)="onlyNumber($event)" formControlName="qty_avail" placeholder="Qty available" />
+                    </td>
+                    <td>
+                        <input type="text" (keypress)="onlyNumber($event)" formControlName="price" placeholder="Price" />
+                    </td>
+                    <td>
+                        <img *ngIf="item.value.imageType==='delete'" class="cursorPointer" (click)="removeProperty(i)" src="assets/img/x.png" alt="">
+                        <img *ngIf="item.value.imageType!='delete'" class="cursorPointer" (click)="onAddProperty(i)" src="assets/img/plus_blue.png"
+                            alt="">
+                    </td>
+                </tr>
+            </table>
+            <div class='row' *ngIf="!showLoading && inventoryType!=''">
+                <div class='small-12 columns text-right'>
+                    <button class="ivrAddNewButton button small" (click)="back()">Back</button>
+                    <button class="ivrAddNewButton button primary small" (click)="save()">Next</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

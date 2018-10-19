@@ -1,0 +1,88 @@
+<div *ngIf='isVisible' class='reveal-overlay '>
+    <div class='reveal new-modal-component' [ngClass]='cssClasses'>
+        <div class='top-container'>
+            <div class='title-container'>
+                <h3>{{ title }}</h3>
+                <button class='close-button' data-close='' aria-label='Close modal' type='button' (click)='onCloseHandler($event)'>
+                    <img class='close-icon' [src]='closeIcon' alt="Close icon">
+                </button>
+            </div>
+        </div>
+        <div class='new-modal-bottom-container modelContainer'>
+            <div class='row selects'>
+                <div class='small-12 columns'>
+                    <div class='row'>
+                        <div class='small-4 columns'>
+                            <span>
+                                <b> Lead Type :</b>
+                            </span>
+                        </div>
+                        <div class='small-7 columns'>
+                            <input [ngClass]="{'disabled':showLoading}" type='text' placeholder="Lead Type" (ngModelChange)="changeLeadType($event)" name="lable" [(ngModel)]="lable">
+                            <span *ngIf="leadTypeError" class="errorClass">Lead type is required</span>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='small-4 columns'>
+                            <span>
+                                <b> Workflow Rule :</b>
+                            </span>
+                        </div>
+                        <div class='small-7 columns'>
+                            <select class="height32" [ngClass]="{'disabled':showLoading}" name='followup_rule_id' (change)="folloupRuleChange($event)" [(ngModel)]="followup_rule_id">
+                                <option value=''>Location Default</option>
+                                <option *ngFor="let item of followupRuleArr" [selected]="followup_rule_id==item.id" [ngValue]='item.id'>{{item.name}}</option>
+                                <!-- <option value='2'>value 2</option>
+                                    <option value='3'>value 3</option> -->
+                            </select>
+                            <span *ngIf="followupRuleIdError" class="errorClass">Please select work flow rule</span>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='small-4 columns'>
+                            <span>
+                                <b> Management Software :</b>
+                            </span>
+                        </div>
+                        <div class='small-7 columns'>
+                            <select class="height32" [ngClass]="{'disabled':showLoading||editRecordId}" (change)="onSoftwareChange()" name='api_type' [(ngModel)]="api_type">
+                                <option *ngFor="let item of apiTypeArr" [ngValue]='item.api_code'>{{item.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='small-4 columns'>
+                            <span>
+                                <b> Transmission Type :</b>
+                            </span>
+                        </div>
+                        <div class='small-7 columns'>
+                            <select class="height32" [ngClass]="{'disabled':showLoading||editRecordId}" name='transmission_type' [(ngModel)]="transmission_type">
+                                <option *ngFor="let item of transmissionTypeArr" [ngValue]='item.value'>{{item.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row'>
+                            <div class='small-4 columns'>
+                            </div>
+                            <div class='small-7 columns'>
+                                <input [ngClass]="{'disabled':showLoading||isDefaultFlag}" type="checkbox" checked="is_default" name="is_default" [(ngModel)]="is_default"> Default
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class='small-12 columns marginTop50 text-center'>
+                    <button (click)="onCloseHandler($event)" class='button cancelButton'>Cancel</button>
+                    <button *ngIf="editRecordId===0" (click)="save($event)" [ngClass]="{'disabled':showLoading}" class='button primary'>Save</button>
+                    <button *ngIf="editRecordId!=0"  (click)="update($event)" [ngClass]="{'disabled':showLoading}" class='button primary'>Update</button>
+                    
+            </div>
+            <div class="small-12 columns loadingdiv" *ngIf='showLoading'>
+                <div class="loading dots-loader">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='toast-container'>
+    <top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>

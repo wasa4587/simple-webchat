@@ -1,0 +1,75 @@
+<div *ngIf='isVisible' class='reveal-overlay '>
+    <div class='reveal new-modal-component' [ngClass]='cssClasses'>
+        <div class='top-container'>
+            <div class='title-container'>
+                <h3>{{ title }}</h3>
+                <button class='close-button' data-close='' aria-label='Close modal' type='button' (click)='onCloseHandler($event)'>
+                    <img class='close-icon' [src]='closeIcon' alt="Close icon">
+                </button>
+            </div>
+        </div>
+        <div class='new-modal-bottom-container modelContainer'>
+            <div class='small-12 columns'>
+                <div class='row'>
+                    <div class='small-3 columns'>
+                        <span>
+                            <b>API Type:</b>
+                        </span>
+                    </div>
+                    <div class='small-8 columns'>
+                        <select class="selectBoxHeight" name='api_type' (change)="apiTypeSelect($event)" [(ngModel)]="api_type">
+                            <option value="">Select API</option>
+                            <option [disabled]="item.value===1" *ngFor="let item of apiTypeArray" [ngValue]='item.value'>{{item.key}}</option>
+                        </select>
+                        <span *ngIf="api_typeError" class="errorClass">Please select api type</span>
+                    </div>
+                </div>
+            </div>
+            <div class='small-12 columns'>
+                <div class='row'>
+                    <div class='small-3 columns'>
+                        <span>
+                            <b>API ID:</b>
+                        </span>
+                    </div>
+                    <div class=' small-8 columns'>
+                        <input *ngIf="api_type===0 || api_type===''" [disabled]="api_type===0 || api_type===''" (keypress)="onlyNumberKey($event)" (ngModelChange)="checkValid($event, 'custom_id')" maxlength="10" name="custom_id" [(ngModel)]="custom_id" type='number'>
+                        <div class="customid-input" *ngIf="api_type===3">
+                            <input-validation typeOfInput='number' [value]='custom_id' [isValid]='isNewCustomeIdValid' tooltipText='API ID should be digits only and greater than 0'
+                                (onChange)='onCustomeIdChange($event)'>
+                            </input-validation>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='small-12 columns'>
+                <div class='row'>
+                    <div class='small-3 columns'>
+                        <span>
+                            <b>Description:</b>
+                        </span>
+                    </div>
+                    <div class='small-8 columns'>
+                            <input-validation typeOfInput='text' [value]='description' [isValid]='isDescriptionValid' tooltipText='Description is required'
+                            (onChange)='onDescriptionChange($event)'>
+                        </input-validation>
+                        <!-- <textarea placeholder="Description" name="description" [(ngModel)]="description" (ngModelChange)="checkValid($event, 'description')"></textarea>
+                        <span *ngIf="descriptionError" class="errorClass">Description is required</span> -->
+                    </div>
+                </div>
+            </div>
+            <div class='small-12 columns marginTop50 text-center'>
+                    <button (click)="onCloseHandler($event)" class='button cancelButton'>Cancel</button>
+                    <button *ngIf="editRecordId===0" (click)="save($event)" [ngClass]="{'disabled':showLoading}" class='button primary'>Save</button>
+                    <button *ngIf="editRecordId!=0" (click)="update($event)" [ngClass]="{'disabled':showLoading}" class='button primary'>Update</button>
+            </div>
+            <div class="small-12 columns loadingdiv" *ngIf='showLoading'>
+                <div class="loading dots-loader">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='toast-container'>
+    <top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>

@@ -1,0 +1,185 @@
+<content-area>
+  <span class='lead-follow-header' header>Leads</span>
+  <div class='row expanded' header>
+    <div class='small-12'>
+      <div class='ui-kit tabs lead-search-tabs'>
+        <div class='tab-push'></div>
+        <tooltip
+          tooltipText="A list of follow-ups<br> to be completed"
+          tooltipColor='rgba(14, 45, 82, 0.8)'
+          tooltipTextColor='white'
+          position='bottom-sidebar-lists'
+        >
+          <a [routerLink]="['/v2/lead/follow-up-list']" class='first tab' [routerLinkActive]="['active']">
+            <span class='first-line'>Follow-ups</span>
+          </a>
+        </tooltip>
+        <tooltip
+          tooltipText="A list of all leads"
+          tooltipColor='rgba(14, 45, 82, 0.8)'
+          tooltipTextColor='white'
+          position='bottom-sidebar-lists'
+        >
+          <a [routerLink]="['/v2/lead/all']" class='tab all'[routerLinkActive]="['active']">
+            <span>All</span>
+          </a>
+        </tooltip>
+
+      </div>
+    </div>
+  </div>
+  <div body class="main-container row expanded">
+    <div class='new-design-filter row expanded'>
+      <div class='search-container search'>
+        <input type='search' class='grey' placeholder='Search by name,phone,unit,ID...' [(ngModel)]='searchValue'/>
+      </div>
+      <span class="filter-static-word showing">Showing</span>
+      <lead-status-filter [refresh]="refresh" [displayName]="displayName" (onSelectionChange)="onLeadStatusChange($event)"></lead-status-filter>
+      <span class="filter-static-word from">from</span>
+      <daterange-filter [dateRange]="dateRange" (onSelectionChange)="onSelectionChange($event)" (onSelectionDateRange)="onSelectionDateRange($event)"></daterange-filter>
+      <span class="from">at</span>
+      <div class='dropdownFilter custom-width'>
+        <tooltip [tooltipText]="selectedLocation" tooltipColor='rgba(14, 45, 82, 0.8)' tooltipTextColor='white' position='top'>
+          <ss-multiselect-dropdown name="dropdownLocations" [options]='dropdownLocations' [texts]='locationMultiSelectTexts' [settings]='locationMultiSelectSettings'
+            [(ngModel)]='locationMultiSelectSelectedOptions' (ngModelChange)='getDropdownSelectedLocation($event)'
+            (dropdownClosed)="onFilterChange(locationMultiSelectSelectedOptions)" >
+          </ss-multiselect-dropdown>
+        </tooltip>
+      </div>
+      <div class="customFilterDisplay">
+        <filter-dropdown [refresh]="refresh" selectMessage="Filter" [dropdownEmployee]="dropdownEmployee" [options]="customFilterOption" (filterSelected)="filterSelected($event)" (filterRemoved)="filterRemoved($event)"></filter-dropdown>
+      </div>
+      <button class="apply-button" (click)="getData()">Apply</button>
+      <button class="reset-button" (click)="resetFilter()">Reset</button>
+    </div>
+    <div class='small-5 columns small-offset-7'>
+      <pagination-component
+        (elementsPerPage)="onPerPageChange($event)"
+        (previousPage)="onPreviousPage($event)"
+        (nextPage)="onNextPage($event)"
+        (validInputValue)="onPageChange($event)"
+        [currentPage]="page===false?1:page"
+        [totalOfPages]="totalPages"
+        [dropdownDefault]="parPage"
+        [hidden]='loading || notData'
+      >
+      </pagination-component>
+    </div>
+    <div *ngIf='loading' class='row expanded loading-no-data-container'>
+      <div *ngIf='loading' class='small-12'>
+        <div *ngIf='loading' class='small-12 loading-container'>
+          <loading
+            *ngIf='loading'
+            title='Loading'
+            message='Please be patient as more detailed reports may take longer to load than others'>
+          </loading>
+        </div>
+      </div>
+    </div>
+      <p *ngIf='notData' class='no-data-message small-12 columns'>
+        <span>There is no data available for the selected filters. Please change your selection.</span>
+      </p>
+      <table class='ui-kit' *ngIf='!loading && !notData'>
+        <tr>
+          <th (click)="setOrderedBy('CONTACT_DATE', 'contact_date')">
+            <div class="th-container">
+              <div class="title">Most recent call</div>
+              <div *ngIf='orderedBy === "CONTACT_DATE"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('NEXT_FOLLOWUP_DATE', 'next_followup_date')">
+            <div class="th-container">
+              <div class="title">Next followup date</div>
+              <div *ngIf='orderedBy === "NEXT_FOLLOWUP_DATE"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('CREATED', 'created')">
+            <div class="th-container">
+              <div class="title">Created date</div>
+              <div *ngIf='orderedBy === "CREATED"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('UNIT_SIZE', 'unit_size')">
+            <div class="th-container">
+              <div class="title">Unit size</div>
+              <div *ngIf='orderedBy === "UNIT_SIZE"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('LEAD_ID', 'lead_id')">
+            <div class="th-container">
+              <div class="title">Lead id</div>
+              <div *ngIf='orderedBy === "LEAD_ID"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('FIRST_NAME', 'first_name')">
+            <div class="th-container">
+              <div class="title">Customer First Name</div>
+              <div *ngIf='orderedBy === "FIRST_NAME"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('LAST_NAME', 'last_name')">
+            <div class="th-container">
+              <div class="title">Customer Last Name</div>
+              <div *ngIf='orderedBy === "LAST_NAME"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('LOCATION', 'location')">
+            <div class="th-container">
+              <div class="title">Location</div>
+              <div *ngIf='orderedBy === "LOCATION"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th (click)="setOrderedBy('PHONE', 'phone')">
+            <div class="th-container">
+              <div class="title">Phone number</div>
+              <div *ngIf='orderedBy === "PHONE"' class="arrow-container">
+                <i *ngIf='arrowStatus === "asc"' class="webfont webfont-keyboard_arrow_up_black"></i>
+                <i *ngIf='arrowStatus === "desc"' class="webfont webfont-keyboard_arrow_down_black"></i>
+              </div>
+            </div>
+          </th>
+          <th>
+            Status
+          </th>
+        </tr>
+        <tr *ngFor="let lead of leads">
+          <td>{{lead.contact_date | date :'yyyy-MM-dd hh:mm:ss'}}</td>
+          <td>{{lead.next_followup_date | date :'yyyy-MM-dd hh:mm:ss'}}</td>
+          <td>{{lead.created | date :'yyyy-MM-dd hh:mm:ss'}}</td>
+          <td>{{lead.unit_size}}</td>
+          <td>{{lead.lead_id}}</td>
+          <td>{{lead.first_name}}</td>
+          <td>{{lead.last_name}}</td>
+          <td>{{lead.location}}</td>
+          <td>{{lead.phone}}</td>
+          <td>
+            <p class="navigate" (click)="goToLeadCard(lead)">Open</p>
+          </td>
+        </tr>
+      </table>
+  </div>
+</content-area>

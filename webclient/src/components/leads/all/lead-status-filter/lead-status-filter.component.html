@@ -1,0 +1,17 @@
+<div class="daterange-container">
+  <tooltip [tooltipText]="selectedOptionName" tooltipColor='rgba(14, 45, 82, 0.8)' tooltipTextColor='white' position='top'>
+    <span (click)="show()" class="cursor">
+      <div class="displayfilter"><b>{{displayName}}</b></div>
+      <i class='material-icons arrow'>arrow_drop_down</i>
+    </span>
+  </tooltip>
+  <div *ngIf="showDropdown" class="dropdownClass">
+    <div class="row" *ngFor="let item of dropdownOptions; let i=index;">
+      <ui-radio class="radioButtondiv" name="radioButtonName" (change)="selectionChange(item.name, item.id)" textColor='#6F6F6F'
+        [checked]="item.name===displayName">{{item.name}}</ui-radio>
+    </div>
+  </div>
+</div>
+<div class='toast-container'>
+  <top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>

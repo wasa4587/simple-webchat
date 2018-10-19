@@ -1,0 +1,69 @@
+<div class='call-routes-container'>
+		<div class="top-container">
+	<div class='call-routes-top-bar-container'>
+		<div class='row align-middle'>
+			<div class='small-8'>
+				<h2>Lead Type</h2>
+			</div>
+			<div class='small-offset-1 small-3 new-call-route-button-container'>
+				<button class='button primary new-call-route-button' (click)='onNewButtonClick($event)' name='createNewLeadType'>Create New</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="bottom-container">
+	<div class='row search-filters-call-routes-container'>
+		<div class='small-2 columns search-filter search' *ngIf='!showLoading'>
+			<input type='search' class=' search-input grey' [(ngModel)]="searchValue" placeholder='Search' (keyup)='onSearchKeyup($event)'>
+		</div>
+
+		<div class="small-2 columns loadingdiv" *ngIf='showLoading'>
+			<div class="loading dots-loader">Loading...</div>
+		</div>
+		<div class='small-offset-3 small-7 columns archive-filters'>
+			<div class='filters-container'>
+				<ul class='button-group filters'>
+					<li>
+						<button class='button' [class.active]='type===variableType.ACTIVE' (click)='filter(variableType.ACTIVE)' [ngClass]="{disabled:showLoading}" name='activeFilter'>ACTIVE</button>
+					</li>
+					<li>
+						<button class='button' [class.active]='type===variableType.ARCHIVED' (click)='filter(variableType.ARCHIVED)' [ngClass]="{disabled:showLoading}" name='archivedFilter'>ARCHIVED</button>
+					</li>
+					<!-- <li>
+						<button class='button' [class.active]='type===variableType.ALL' (click)='filter(variableType.ALL)' [ngClass]="{disabled:showLoading}">ALL</button>
+					</li> -->
+				</ul>
+			</div>
+			<input class="moveindisableclass" type="checkbox" (change)="onDisableMoveIn($event.target.checked)" [ngModel]="disableMoveIn" [checked]="disableMoveIn" name='disableMoveIn'/> <span class="disable_move_in">Disable Move-in </span>
+			<button class="archive-button" (click)='onArchive()' *ngIf='type===variableType.ACTIVE' [disabled]='checked.length === 0 || showLoading'
+			 [class.disabled]='checked.length === 0' name='archiveAction'>
+				<i class='material-icons'>archive</i>
+				<span class='text'>ARCHIVE</span>
+			</button>
+			<button class="archive-button" (click)='onArchive()' *ngIf='type===variableType.ARCHIVED' [disabled]='checked.length === 0 || showLoading'
+			 [class.disabled]='checked.length === 0' name='unarchiveAction'>
+				<i class='material-icons'>unarchive</i>
+				<span class='text'>UNARCHIVE</span>
+			</button>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='small-12 medium-12 large-12 listDataDiv'>
+			<lead-types-grid [filteredDatas]='filteredDatas' (workFlowruleArray)='workFlowruleArray($event)' (afterAllData)='afterAllData($event)' (data)='catchData($event)' (checkedChanges)='onCheckedChanges($event)'
+			(editMode)='onEditMode($event)' [type]='type' [refresh]='refresh'>
+			</lead-types-grid>
+		</div>
+	</div>
+	</div>
+</div>
+
+<div class='toast-container'>
+	<top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>
+
+<create-lead-type-modal *ngIf='isCreateModalVisible'
+[title]='newLeadTypeModalTitle'
+[parent_id]="parent_id"
+[editRecordId]='editRecordId'
+cssClasses='large'
+(onClose)='onCreateModalClose($event)'></create-lead-type-modal>

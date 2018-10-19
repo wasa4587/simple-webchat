@@ -1,0 +1,50 @@
+<div class="row marginTop20">
+    <div class='small-12 medium-12 large-12'>
+        <div class='row'>
+            <div class='small-4 columns marginTopBottom20'>
+                <b>Inventory Type</b>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row marginTop20">
+    <div class='small-12 medium-12 large-12'>
+        <form [formGroup]="inventoryTypesForm">
+            <div formArrayName="typesProperties" *ngFor="let item of typesProperties.controls; let i = index; let last = last;">
+                <div [formGroupName]="i">
+                    <div class='row'>
+                        <div [ngClass]="(item.value.status==='old')?'small-6 lableNamerowContent':'small-6'">
+                            <div class="row">
+                                <div *ngIf="!inventoryTypeArray[item.value.type_id]" class='small-6 columns displayInventoryType'>
+                                    <span (dblclick)="onEditTypes(i);">{{item.value.type_name}}</span>
+                                </div>
+                                <div *ngIf="inventoryTypeArray[item.value.type_id]" class='small-6 columns'>
+                                    <input type="text" formControlName="type_name" value="{{item.value.type_name}}" placeholder="Enter inventory type" />
+                                </div>
+                                <div class='small-1 columns marginRight60'>
+                                    <button *ngIf="inventoryTypeArray[item.value.type_id] && item.value.status==='old'" class="button primary tiny"
+                                        (click)="updateType(i)">save</button>
+                                </div>
+                                <div class='small-1 columns marginRight22'>
+                                    <button *ngIf="inventoryTypeArray[item.value.type_id] && item.value.status==='old'" class="button primary tiny"
+                                        (click)="cancelType(i)">cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='small-1 columns' *ngIf="1!=typesProperties.controls.length  && (i+1)!=typesProperties.controls.length">
+                            <img class="cursorPointer" (click)="removeInventoryType(i)" src="assets/img/x.png" alt="">
+                        </div>
+                        <div class='small-1 columns' *ngIf="(i+1)===typesProperties.controls.length">
+                            <img class="cursorPointer" (click)="onAddInventoryTypeProperty()" src="assets/img/plus_blue.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row' *ngIf="!showLoading" >
+                <div class='small-7 columns text-right'>
+                    <button class="ivrAddNewButton button primary small" (click)="save()">Next</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

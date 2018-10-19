@@ -1,0 +1,27 @@
+
+
+.new-message {
+  display: flex;
+  height: 100%;
+  form {
+    display: flex;
+    flex: 1;
+    input[type=text] {
+      width: 100%;
+      padding-left: 20px;
+      background: #efefef;
+      border: none;
+      border-radius: 5px;
+      &::-webkit-input-placeholder,
+      &::-moz-placeholder,
+      &:-ms-input-placeholder,
+      &:-moz-placeholder {
+        font-size: 20px;
+        font-style: italic;
+      }
+    }
+    button {
+      padding: 10px;
+    }
+  }
+}

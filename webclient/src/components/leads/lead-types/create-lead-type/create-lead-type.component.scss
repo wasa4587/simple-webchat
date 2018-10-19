@@ -1,0 +1,30 @@
+.new-modal-component {
+    // min-height: 600px;
+    width: 50%;
+  
+    .new-modal-bottom-container {
+      padding: 0;
+    }
+}
+.modelContainer {
+	margin: 25px;
+}
+.height32 {
+	height: 32px;
+}
+.marginTop50 {
+  	margin-top: 50px;
+}
+.loadingdiv {
+  padding-bottom: 20px;
+}
+.errorClass{
+  font-size: 12px;
+  color: red;
+}
+.cancelButton {
+  margin-right: 20px;
+}
+.disabled {
+  pointer-events: none;
+}

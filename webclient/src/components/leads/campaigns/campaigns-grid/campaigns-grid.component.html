@@ -1,0 +1,50 @@
+<div class='tables call-route-grid-table'>
+	<div class='small-8 medium-10 large-12 columns'>
+		<div class='row'>
+			<div class='small-12'>
+				<table>
+					<tr class='headers-row'>
+						<th class='checkbox-column' *ngIf='type!==variableType.ALL'>
+							<input type="checkbox" [checked]='checkedAll' (change)="checkAllRecords($event)" />
+						</th>
+						<th [ngClass]="sorterArray['name']===''? 'sorteable': 'sorted ' + sorterArray['name']" (click)="orderByNameOrder('name')">CAMPAIGN</th>
+						<th [ngClass]="sorterArray['version']===''? 'sorteable': 'sorted ' + sorterArray['version']" (click)="orderByNameOrder('version')">LATEST VERSION</th>
+						<th [ngClass]="sorterArray['workflow_type']===''? 'sorteable': 'sorted ' + sorterArray['workflow_type']" (click)="orderByNameOrder('workflow_type')">CAMPAIGN TYPE</th>
+						<th></th>
+					</tr>
+					<tr *ngFor='let item of listData; let i = index;'>
+						<td *ngIf='type!==variableType.ALL'>
+							<input type="checkbox" [checked]='checkedAll' (change)="checkRecord($event, item.id)" />
+						</td>
+						<td>
+							<span>
+								<div [ngClass]="(item.is_default===1)?'defaultClass defaultTrue':'defaultClass'"></div>{{item.name}}</span>
+						</td>
+						<td>
+							<span>{{item.version}}</span>
+						</td>
+						<td>
+							<span class="workflow-type">{{item.workflow_type}}</span>
+						</td>
+
+						<td>
+							<div class='row'>
+								<div class='small-offset-10 small-1'>
+									<tooltip tooltipText='EDIT' tooltipColor='#0E2D52' tooltipTextColor='white' position='left'>
+										<div class='edit-icon icon' (click)='onEditMode(item.id)'></div>
+									</tooltip>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf='listData.length===0'>
+						<td></td>
+						<td>
+							<span>No data available in table.</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

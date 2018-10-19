@@ -1,0 +1,22 @@
+<div class="assign-container">
+	<div class="buttons-container">
+		<button type="button" (click)="transferData()" name='transferData'>﹤</button>
+		<!-- <button type="button" (click)="transferData()"><<</button> -->
+	</div>
+	<div class="group-container">
+		<div class="title">{{title}}</div>
+		<div class="list-container" id='listContainer'>
+			<div class="search-bar">
+				<input type="text" (keyup)="onSearch($event)" name='searchVariable'/>
+				<i class="webfont webfont-ios-search"></i>
+			</div>
+			<div class="options-container">
+				<!-- <div class="option" (click)="onSelectAllGroup2()">Select All</div> -->
+				<div *ngFor='let option of group1' class="option" [ngClass]="{'active': selectedOptions.indexOf(option[idProperty]) !==-1}"
+				 (click)="onOptionSelected(option, $event)" id='variableItem'>
+					{{option[nameProperty]}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

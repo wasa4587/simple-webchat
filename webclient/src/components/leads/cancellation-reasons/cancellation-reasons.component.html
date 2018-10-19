@@ -1,0 +1,71 @@
+<div class='call-routes-container'>
+	<div class="top-container">
+		<div class='call-routes-top-bar-container'>
+			<div class='row align-middle'>
+				<div class='small-8'>
+					<h2>Reason No Longer Needed Setup</h2>
+				</div>
+				<div class='small-offset-1 small-3 new-call-route-button-container'>
+					<button class='button primary new-call-route-button' (click)='onNewButtonClick($event)'>New</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-container">
+		<div class='row search-filters-call-routes-container'>
+			<div class='small-2 columns search-filter search' *ngIf='!showLoading'>
+				<input type='search' [(ngModel)]="searchValue" class=' search-input grey' placeholder='Search' (keyup)='onSearchKeyup($event)'>
+			</div>
+
+			<div class="small-2 columns loadingdiv" *ngIf='showLoading'>
+				<div class="loading dots-loader">Loading...</div>
+			</div>
+			<div class='small-offset-3 small-7 columns archive-filters'>
+				<!-- <div class='filters-container'>
+				<ul class='button-group filters'>
+					<li>
+						<button class='button' [class.active]='type===variableType.ACTIVE' (click)='filter(variableType.ACTIVE)' [ngClass]="{disabled:showLoading}">ACTIVE</button>
+					</li>
+					<li>
+						<button class='button' [class.active]='type===variableType.ARCHIVED' (click)='filter(variableType.ARCHIVED)' [ngClass]="{disabled:showLoading}">ARCHIVED</button>
+					</li>
+					<li>
+						<button class='button' [class.active]='type===variableType.ALL' (click)='filter(variableType.ALL)' [ngClass]="{disabled:showLoading}">ALL</button>
+					</li>
+				</ul>
+			</div> -->
+				<button class="archive-button" (click)='displayModal()' *ngIf='type===variableType.ACTIVE' [disabled]='checked.length === 0 || showLoading'
+				 [class.disabled]='checked.length === 0'>
+					<i class='material-icons'>archive</i>
+					<span class='text'>DELETE</span>
+				</button>
+				<!-- <button class="archive-button" (click)='onArchive()' *ngIf='type===variableType.ARCHIVED' [disabled]='checked.length === 0'
+			 [class.disabled]='checked.length === 0'>
+				<i class='material-icons'>unarchive</i>
+				<span class='text'>UNARCHIVE</span>
+			</button> -->
+			</div>
+		</div>
+		<div class='row'>
+			<div class='small-12 medium-12 large-12 listDataDiv'>
+				<cancellation-reasons-grid [filteredDatas]='filteredDatas' (afterAllData)='afterAllData($event)' (data)='catchData($event)'
+				 (checkedChanges)='onCheckedChanges($event)' (editMode)='onEditMode($event)' [apiTypeArr]='apiTypeArr' [type]='type' [refresh]='refresh'>
+				</cancellation-reasons-grid>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class='toast-container'>
+	<top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>
+
+ <!-- Modal to create -->
+<create-cancellation-reasons-modal *ngIf='isCreateModalVisible' [title]='newRecordModalTitle' [editRecordId]='editRecordId'
+ cssClasses='large' (onClose)='onCreateModalClose($event)'></create-cancellation-reasons-modal>
+
+ <!-- Modal to confirm delete -->
+<modal-alert message='Are you sure you wish to delete these call reasons?' title='Warning' *ngIf='isWarningModalVisible' (onLeftButton)='onConfirm($event)'
+(onRightButton)='onCancel($event, "delete")' (onClose)='hideModal($event, "delete")' type='warning' leftButtonText='Confirm'
+rightButtonText='Cancel' isModalInsideOfContentArea='true'>
+</modal-alert>

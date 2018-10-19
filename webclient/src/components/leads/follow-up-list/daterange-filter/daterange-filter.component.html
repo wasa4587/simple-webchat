@@ -1,0 +1,23 @@
+<div class="daterange-container">
+  <tooltip [tooltipText]="dateRangeSelected" tooltipColor='rgba(14, 45, 82, 0.8)' tooltipTextColor='white' position='top'>
+    <div (click)="show()" class="cursor">
+      <div class="displayfilter"><b>{{dateRange}}</b></div>
+      <i class='material-icons arrow custome-material-icon'>arrow_drop_down</i>
+    </div>
+  </tooltip>
+  <div *ngIf="showDropdown" class="dateRangeDropdown">
+    <div class="row" *ngFor="let item of dropdownDateRange; let i=index;">
+      <ui-radio class="dateRangeRadio" name="daterangeselected" (change)="selectionChange(item.name, item.id)" textColor='#6F6F6F'
+        [checked]="item.name===dateRange" id="radiobuttonCustome_{{item.id}}">{{item.name}}</ui-radio>
+    </div>
+    <div class="row">
+      <ui-radio name="daterangeselected" (change)="selectionChange('', '')" class="dateRangeRadioDate" [checked]="selecreedRadioButton"></ui-radio>
+      <input [(ngModel)]="fromDate" class="dateRangeDateinput" type="date" (change)="selectionDateRange($event, 'from')" [max]="todayDate">
+      <span class="toDateRange">to</span>
+      <input [(ngModel)]="toDate" (change)="selectionDateRange($event, 'to')" class="dateRangeDateinput" type="date" [max]="todayDate">
+    </div>
+  </div>
+</div>
+<div class='toast-container'>
+  <top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>

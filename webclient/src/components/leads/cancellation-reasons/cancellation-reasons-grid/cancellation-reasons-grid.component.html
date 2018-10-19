@@ -1,0 +1,49 @@
+<div class='tables call-route-grid-table'>
+	<div class='small-8 medium-10 large-12 columns'>
+		<div class='row'>
+			<div class='small-12'>
+				<table>
+					<tr class='headers-row'>
+						<th class='checkbox-column' *ngIf='type!==variableType.ALL'>
+							<input type="checkbox" [checked]='checkedAll' (change)="checkAllRecords($event)" />
+						</th>
+						<th [ngClass]="sorterArray['api_type']===''? 'sorteable': 'sorted ' + sorterArray['api_type']" (click)="orderByNameOrder('api_type')">API</th>
+						<th [ngClass]="sorterArray['custom_id']===''? 'sorteable': 'sorted ' + sorterArray['custom_id']" (click)="orderByNameOrder('custom_id')">CUSTOM ID</th>
+						<th [ngClass]="sorterArray['description']===''? 'sorteable': 'sorted ' + sorterArray['description']" (click)="orderByNameOrder('description')">DESCRIPTION</th>
+						<th></th>
+					</tr>
+					<tr *ngFor='let item of listData; let i = index;'>
+						<td *ngIf='type!==variableType.ALL'>
+							<input *ngIf='item.id' type="checkbox" [checked]='checkedAll' (change)="checkRecord($event, item.id)" />
+						</td>
+						<td>
+							<span>{{apiTypeArr[item.api_type]}}</span>
+						</td>
+						<td>
+							<span>{{ item.api_type==0?'N/A':item.custom_id}}</span>
+						</td>
+						<td>
+							<span>{{item.description}}</span>
+						</td>
+
+						<td>
+							<div class='row' *ngIf='item.id'>
+								<div class='small-offset-10 small-1'>
+									<tooltip tooltipText='EDIT' tooltipColor='#0E2D52' tooltipTextColor='white' position='left'>
+										<div class='edit-icon' (click)='onEditMode(item.id)'></div>
+									</tooltip>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf='listData.length===0'>
+						<td></td>
+						<td>
+							<span>No data available in table.</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

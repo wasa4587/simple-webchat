@@ -1,0 +1,103 @@
+<div *ngIf='isVisible' class='reveal-overlay '>
+    <div class='reveal new-modal-component' [ngClass]='cssClasses'>
+        <div class='top-container'>
+            <div class='title-container'>
+                <h3>{{ title }}</h3>
+                <button class='close-button' data-close='' aria-label='Close modal' type='button' (click)='onCloseHandler($event)'>
+                    <img class='close-icon' [src]='closeIcon' alt="Close icon">
+                </button>
+            </div>
+        </div>
+        <div class='new-modal-bottom-container modelContainer'>
+            <div class='row selects'>
+                <div class='small-12 columns'>
+                    <div class='row'>
+                        <div class='small-2 columns'>
+                            <span>
+                                <b> Template Name :</b>
+                            </span>
+                        </div>
+                        <div class='small-7 columns'>
+                            <input type='text' placeholder="Template Name" (ngModelChange)="changeTemplateName($event)" name="name" [(ngModel)]="name">
+                            <span *ngIf="nameError" class="errorClass">Template name can only have alphabets, digits, hyphen(-), underscore(_) and space( ) and should
+                                be at least 2 character.</span>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='small-2 columns'>
+                            <span>
+                                <b>Template Type :</b>
+                            </span>
+                        </div>
+                        <div class='small-5 columns'>
+                            <select class="height35" name='type' (change)="changeTemplateType($event)" [(ngModel)]="type">
+                                <option *ngFor="let item of templateTypeArr" [ngValue]='item.value'>{{item.key}}</option>
+                            </select>
+                        </div>
+                        <div class='small-2 columns' *ngIf="type==='other_email' || type==='other'">
+                            <input type='checkbox' checked="is_default" class="defaultCheckbox" name="is_default" [(ngModel)]="is_default">
+                            <label>Default</label>
+                        </div>
+                    </div>
+                    <div class='row' *ngIf="type==='email' || type==='other_email' || type==='kiosk_receipt' || type==='movein_email' || type==='moveout_email'">
+                        <div class='small-2 columns'>
+                            <span>
+                                <b> Subject :</b>
+                            </span>
+                        </div>
+                        <div class='small-7 columns'>
+                            <input type='text' placeholder="Subject" name="subject" [(ngModel)]="subject">
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='small-2 columns'>
+                            <span>
+                                <b> Message :</b>
+                            </span>
+                        </div>
+                        <div class='small-6 columns'>
+                            <ckeditor id="editor1" name="editor1" [(ngModel)]="template_text" (change)="onChange($event)" [config]="config">
+                            </ckeditor>
+                            <span *ngIf="templateTextError" class="errorClass">Template text is required.</span>
+                            <br>
+                            <span *ngIf="smsTextLengthError" class="errorClass">Max length should be 400 characters.</span>
+                            <br>
+                            <span *ngIf="type==='sms' || type==='other'" class="smsNotice">{{smsTextLength}} Character(s) (Max length should be 400 characters).</span>
+
+                            <!-- <ckeditor 
+                                [(ngModel)]="ckeditorContent" 
+                                [config]="{uiColor: '#99000'}" 
+                                [readonly]="false" 
+                                (change)="onChange($event)" 
+                                (editorChange)="onEditorChange($event)"
+                                (ready)="onReady($event)" 
+                                (focus)="onFocus($event)" 
+                                (blur)="onBlur($event)" 
+                                (contentDom)="onContentDom($event)"
+                                (fileUploadRequest)="onFileUploadRequest($event)" 
+                                debounce="500">
+                            </ckeditor> -->
+                            <!-- <textarea *ngIf="type==='sms' || type==='other'" [(ngModel)]="template_textarea" ></textarea> -->
+                        </div>
+                        <div class="small-4 columns">
+                            <select-variable title='Select variables for Template' [data]="templateVariableArr" nameProperty='name' idProperty='name'
+                                (onChange)="selectVariable($event)">
+                            </select-variable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='small-12 columns marginTop50 text-center'>
+                <button (click)="onCloseHandler($event)" class='button customeButtonClass'>Cancel</button>
+                <button *ngIf="editRecordId===0" (click)="save($event)" [ngClass]="{'disabled':showLoading}" class='button primary'>Save</button>
+                <button *ngIf="editRecordId!=0" (click)="update($event)" [ngClass]="{'disabled':showLoading}" class='button primary'>Update</button>
+            </div>
+            <div class="small-12 columns loadingdiv" *ngIf='showLoading'>
+                <div class="loading dots-loader">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='toast-container'>
+	<top-toast [messages]='errorList' (onHidden)="toastIsHidden($event)"></top-toast>
+</div>

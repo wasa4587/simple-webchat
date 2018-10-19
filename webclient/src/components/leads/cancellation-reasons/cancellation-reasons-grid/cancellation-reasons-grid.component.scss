@@ -1,0 +1,87 @@
+.call-route-grid-table {
+  table {
+    border: none;
+    .headers-row {
+
+      th {
+        color: #0075CD;
+        font-family: "SF UI Text";
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 12px;
+        width: 103px;
+        text-align: left;
+        &::selection { background: transparent; }
+        &::-moz-selection { background: transparent; }
+        &.sorteable::after{
+          left: 160px;
+          top: 9px;
+        }
+        &.checkbox-column {
+          width: 15px;
+        }
+        &.sorted::after {
+          background: none;
+          content: '\f107';
+          top: 9px;
+          left: 160px;
+          font-family: fontawesome;
+        }
+        &.sorted {
+          &.desc::after{
+          top: 15px;
+          right: 130px;
+          }
+        }
+      }
+    }
+    td {
+      width: auto;
+      text-align: left;
+
+      .delete-icon {
+        width: 13px;
+        height: 21px;
+        color: #707070;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .delete-icon:hover {
+        cursor: pointer;
+      }
+
+      .edit-icon {
+        width: 16px;
+        height: 16px;
+        background-image: url(#{$assetsPath}/icon/create-new-pencil-button.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        float: left;
+        margin-top: 4px;
+        cursor: pointer;
+      }
+      .new-variable {
+      	color: #0075CD;
+      	font-size: 20px;
+      	line-height: 20px;
+        cursor: pointer;
+      }
+
+      .edit-icon:hover {
+        cursor: pointer;
+      }
+
+      button.button {
+        padding: initial;
+        margin-bottom: initial;
+        margin-left: 10px;
+        padding: 5px;
+      }
+    }
+
+    .add-variable-container {
+      margin-left: 23%;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+
+
+.message-list {
+  height: calc(100% - 20px);
+  padding: 10px;
+  .message+.message {
+    margin-top: 10px;
+  }
+}
