@@ -18,7 +18,8 @@ This Reactjs/Nodejs multiple user single channel webchat using vanilla websocket
   npm i
   npm start
 ```
-you should see in the console
+you should see somethinig like this in the console
+
 
 `Fri Oct 19 2018 00:57:37 GMT-0500 (Hora de verano central (México)) Server is listening on port 1337`
 
