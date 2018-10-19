@@ -11,6 +11,7 @@ This Reactjs/Nodejs multiple user single channel webchat using vanilla websocket
  - notify user join, left events.
  - display channel members
  - Users are disconnected when they close the browser tab
+ - All components are Higher Order Components
 
 
 ## How to run the server
@@ -54,7 +55,6 @@ You should be able to see the chat client
 Open a new browser tab to log in as new user
 
 ### I didn't have time to
-- Handle websockets via sagas
 - Add a linter
 - Use flow 
 - Create a fancy design
