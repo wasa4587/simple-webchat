@@ -49,3 +49,8 @@ To create a production build, use yarn build.
 Paste one of the urls in your browser i.e. `http://localhost:3000/`
 
 You should be able to see the chat client
+
+### I didn't have time to
+- Handle websockets via sagas
+- Add a linter
+- Use flow 
