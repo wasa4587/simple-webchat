@@ -54,3 +54,4 @@ You should be able to see the chat client
 - Handle websockets via sagas
 - Add a linter
 - Use flow 
+- Create a fancy design
