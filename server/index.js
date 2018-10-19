@@ -3,14 +3,16 @@ const { Channel } = require('./models/channel');
 
 const http = require('http');
 
+const PORT = 1337;
+
 const server = http.createServer((request, response) => {
   console.log((new Date()) + ' Received request for ' + request.url);
   response.writeHead(404);
   response.end();
 });
 
-server.listen(1337, () => {
-  console.log((new Date()) + ' Server is listening on port 8080');
+server.listen(PORT, () => {
+  console.log((new Date()) + ` Server is listening on port ${PORT}`);
 });
 
 // create the websocket server
