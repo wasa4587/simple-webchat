@@ -9,11 +9,16 @@ import { ChatClient, MESSAGE_TYPE } from './models/chat-client'
 
 import './app.scss';
 
+/**
+ * Example of wrapping a HOC component 
+ */
 const WrappedMessageList = ShouldMessageListChangedWrapper(MessageList);
 
-class App extends Component {
-  chatClient;
+const TYPING_TIMEOUT = 3000;
 
+class App extends Component {
+  _chatClient;
+  _timer;
   constructor(props) {
     super(props);
     this.state = {
@@ -21,14 +26,14 @@ class App extends Component {
       users: [],
       username: '',
       typing: {
-        show: false,
+        text: '',
         user: []
       },
     };
   }
   componentDidMount() {
-    this.chatClient = new ChatClient('ws://localhost:1337');
-    this.chatClient.subcribe(this._onChatClientMessageReceived.bind(this));
+    this._chatClient = new ChatClient('ws://localhost:1337');
+    this._chatClient.subcribe(this._onChatClientMessageReceived.bind(this));
   }
 
   /**
@@ -58,15 +63,26 @@ class App extends Component {
     * @param {Array<string>} users
     * @private
    */
-  _updateTyping(user) {
+  _updateTyping(username) {
+    if (username !== this.state.username) {
+      clearTimeout(this._timer);
+      this._timer = setTimeout(() => {
+        const typing = {users: [], text: ''};
+        this.setState({typing});
+      }, TYPING_TIMEOUT);
 
-    this.setState((prevState, props) => {
-      const typing = {
-        show: true,
-        users: [],
-      };
-      return {typing};
-    });
+      this.setState((prevState, props) => {
+        const usersSet = new Set(prevState.typing.users);
+        usersSet.add(username);
+        const users = [...usersSet];
+        const text = users.length > 1 ? 'Several users are typing...' : `${users[0]} is typing...`;
+        const typing = {
+          users,
+          text,
+        };
+        return {typing};
+      });
+    }
   }
   /**
     * handles new message from websocket
@@ -79,7 +95,7 @@ class App extends Component {
         this.setState({username: message.username});
         break;
       case MESSAGE_TYPE.TYPING:
-      //  this._updateTyping(message.username);
+        this._updateTyping(message.username);
         break;
       case MESSAGE_TYPE.MESSAGE:
         this._addMessage(message);
@@ -96,7 +112,7 @@ class App extends Component {
     * @private
    */
   _sendTyping() {
-    this.chatClient.sendTyping();
+    this._chatClient.sendTyping();
   }
 
   /**
@@ -104,7 +120,7 @@ class App extends Component {
     * @private
    */
   _sendMessage(message) {
-    this.chatClient.sendMessage(message);
+    this._chatClient.sendMessage(message);
   }
 
   render() {
@@ -117,7 +133,9 @@ class App extends Component {
               </WrappedMessageList>
             </div>
             <div className='messages-container-bot'>
-              <div className='typing-container'>User is typing...</div>
+              <div className='typing-container'>
+                { this.state.typing.text }
+              </div>
               <div className='new-message-container'>
                 <NewMessage
                   onSend={this._sendMessage.bind(this)}

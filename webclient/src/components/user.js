@@ -6,7 +6,7 @@ export function User(props) {
   const className = props.you ? 'user you' : 'user';
   return (
     <div className={className}>
-      {props.username} {props.you ? ' ( you )' : ''}
+      {props.username} {props.you ? ' (you)' : ''}
     </div>
   );
 }
