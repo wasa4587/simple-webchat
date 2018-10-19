@@ -56,3 +56,5 @@ You should be able to see the chat client
 - Use flow 
 - Create a fancy design
 - Create automatic port on websocket server
+- Validate errors
+- Validate structure between messages are correct
