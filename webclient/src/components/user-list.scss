@@ -2,6 +2,8 @@
 
 .user-list {
   padding: 10px;
+  height: 100%;
+  overflow-y: auto;
   .user+.user {
     margin-top: 10px;
   }
