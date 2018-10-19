@@ -10,6 +10,7 @@ This Reactjs/Nodejs multiple user single channel webchat using vanilla websocket
  - typing indicator
  - notify user join, left events.
  - display channel members
+ - Users are disconnected when they close the browser tab
 
 
 ## How to run the server
@@ -49,6 +50,8 @@ To create a production build, use yarn build.
 Paste one of the urls in your browser i.e. `http://localhost:3000/`
 
 You should be able to see the chat client
+
+Open a new browser tab to log in as new user
 
 ### I didn't have time to
 - Handle websockets via sagas
