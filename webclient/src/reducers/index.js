@@ -1,22 +1,20 @@
-import {
-  UPDATE_USER_LIST,
-  ADD_MESSAGE,
-} from '../actions';
+import * as ACTIONS from '../actions';
 
 let newState = {
   users: [],
   messages: [],
+  username: '',
+  typingUsers: [],
 };
 
 export default function(state, action) {
   switch (action.type) {
-    case UPDATE_USER_LIST:
+    case ACTIONS.WS_UPDATE_USER_LIST:
       return {
         ...state,
         users: action.users,
       };
-    case ADD_MESSAGE:
-
+    case ACTIONS.WS_MESSAGE_RECEIVED:
       const messages = [...state.messages];
       messages.push(action.message);
 
@@ -24,6 +22,37 @@ export default function(state, action) {
         ...state,
         messages,
       };
+    case ACTIONS.WS_WELCOME:
+      return {
+        ...state,
+        username: action.username,
+      };
+    case ACTIONS.WS_CONNECT_SERVER_SUCCESS:
+      return {
+        ...state,
+        ws: action.ws,
+      };
+    case ACTIONS.WS_TYPING_RECEIVED:
+      if (state.username === action.username) {
+        return {
+          ...state,
+        };
+      } else {
+        const typingUsersSet = new Set(state.typingUsers);
+        typingUsersSet.add(action.username);
+        const typingUsers = [...typingUsersSet];
+
+        return {
+          ...state,
+          typingUsers,
+        };        
+      }
+    case ACTIONS.WS_CLEAR_TYPING_USERS:
+      return {
+        ...state,
+        typingUsers: [],
+      };
+
     default:
       return state || newState;
   }
