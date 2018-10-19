@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
+import { CONFIG } from './config';
 import {
   MessageList,
   UserList,
   NewMessage,
   ShouldMessageListChangedWrapper
 } from './components';
+import { connect } from 'react-redux';
+import * as actions from './actions';
+import {
+  mapStateToProps,
+  mapDispatchToProps
+} from './utils';
+
 import { ChatClient, MESSAGE_TYPE } from './models/chat-client'
 
 import './app.scss';
 
 /**
- * Example of wrapping a HOC component 
+ * Example of wrapping a HOC component
  */
 const WrappedMessageList = ShouldMessageListChangedWrapper(MessageList);
 
@@ -22,8 +30,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [],
-      users: [],
       username: '',
       typing: {
         text: '',
@@ -32,35 +38,13 @@ class App extends Component {
     };
   }
   componentDidMount() {
-    this._chatClient = new ChatClient('ws://localhost:1337');
+    this._chatClient = new ChatClient(CONFIG.ws);
     this._chatClient.subcribe(this._onChatClientMessageReceived.bind(this));
   }
 
   /**
-    * Add message
-    * @param {object} message
-    * @private
-   */
-  _addMessage(message) {
-    this.setState((prevState, props) => {
-      const messages = [...prevState.messages];
-      messages.push(message);
-      return {messages};
-    });
-  }
-
-  /**
-    * Update users list in state
-    * @param {Array<string>} users
-    * @private
-   */
-  _updateUsers(users) {
-    this.setState({users});
-  }
-
-  /**
-    * Update users list in state
-    * @param {Array<string>} users
+    * Update typing indicator
+    * @param {string} username
     * @private
    */
   _updateTyping(username) {
@@ -91,17 +75,19 @@ class App extends Component {
    */
   _onChatClientMessageReceived(message) {
     switch(message.type) {
+      // with component state
       case MESSAGE_TYPE.WELCOME:
         this.setState({username: message.username});
         break;
       case MESSAGE_TYPE.TYPING:
         this._updateTyping(message.username);
         break;
+       // with redux
       case MESSAGE_TYPE.MESSAGE:
-        this._addMessage(message);
+        this.props.addMessage(message);
         break;
       case MESSAGE_TYPE.USER_LIST:
-        this._updateUsers(message.users);
+        this.props.updateUserList(message.users);
         break;
       default:
     }
@@ -129,7 +115,7 @@ class App extends Component {
         <div className='webchat'>
           <div className='messages-container'>
             <div className='messages-container-top'>
-              <WrappedMessageList username={this.state.username} messages={this.state.messages}>
+              <WrappedMessageList username={this.state.username} messages={this.props.messages}>
               </WrappedMessageList>
             </div>
             <div className='messages-container-bot'>
@@ -145,12 +131,11 @@ class App extends Component {
             </div>
           </div>
           <div className='users-list-container'>
-            <UserList username={this.state.username} users={this.state.users}></UserList>
+            <UserList username={this.state.username} users={this.props.users}></UserList>
           </div>
         </div>
       </div>
     );
   }
 }
-
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
