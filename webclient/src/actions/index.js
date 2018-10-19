@@ -11,7 +11,7 @@ export const WS_SEND_TYPING_SUCCESS = 'WS_SEND_TYPING_SUCCESS';
 export const WS_CLEAR_TYPING_USERS = 'WS_CLEAR_TYPING_USERS';
 
 /**
- * Action to update user list
+ * Send message to the websocket
  * @param {Array<string>} users
  */
 export function wsSendMessage(text) {
@@ -22,7 +22,7 @@ export function wsSendMessage(text) {
 }
 
 /**
- * Action to update user list
+ * if the sending message was success
  * @param {Array<string>} users
  */
 export function wsSendMessageSuccess() {
@@ -32,7 +32,7 @@ export function wsSendMessageSuccess() {
 }
 
 /**
- * Action to update user list
+ * Send typing indicator
  * @param {Array<string>} users
  */
 export function wsSendTyping() {
@@ -42,7 +42,7 @@ export function wsSendTyping() {
 }
 
 /**
- * Action to update user list
+ * Called if sending the typing indicator was success
  * @param {Array<string>} users
  */
 export function wsSendTypingSuccess() {
@@ -63,7 +63,7 @@ export function wsUpdateUserList(users) {
 }
 
 /**
-  * Add message
+  * Called when a message arrives from the websocket
   * @param {object} message
  */
 export function wsMessageReceived(message) {
@@ -74,7 +74,7 @@ export function wsMessageReceived(message) {
 }
 
 /**
-  * Add message
+  * Connect to the server
   * @param {object} message
  */
 export function wsConnectServer(serverUrl) {
@@ -85,7 +85,7 @@ export function wsConnectServer(serverUrl) {
 }
 
 /**
-  * Add message
+  * Called if the conection was success
   * @param {object} message
  */
 export function wsConnectServerSuccess(ws) {
@@ -96,7 +96,7 @@ export function wsConnectServerSuccess(ws) {
 }
 
 /**
-  * Add message
+  * Called once when user was created
   * @param {object} message
  */
 export function wsWelcome(username) {
@@ -107,7 +107,7 @@ export function wsWelcome(username) {
 }
 
 /**
-  * Add message
+  * Called when typing indicator was received
   * @param {object} message
  */
 export function wsTypingReceived(username) {

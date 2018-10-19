@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga'
+import { eventChannel, END } from 'redux-saga'
 import { takeEvery, put, call, take, select, takeLatest } from 'redux-saga/effects';
 
 import * as ACTIONS from '../actions';
@@ -47,6 +47,9 @@ function initWebsocket(serverUrl) {
         }
 
       }
+    }
+    ws.onclose = (event) => {
+      return emitter(END);
     }
     // unsubscribe function
     return () => {
