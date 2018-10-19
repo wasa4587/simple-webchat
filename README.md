@@ -27,6 +27,8 @@ you should see somethinig like this in the console
 ```
   cd webclient
   npm i
+  cp config/config.template.js config/config.js
+  vi config/config.js # add the ws url i.e.   ws: 'ws://localhost:1337'
   npm start
 ```
 
