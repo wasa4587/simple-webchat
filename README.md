@@ -27,6 +27,8 @@ you should see somethinig like this in the console
 ```
   cd webclient
   npm i
+  cp config/config.template.js config/config.js
+  vi config/config.js # add the ws url i.e.   ws: 'ws://localhost:1337'
   npm start
 ```
 
@@ -47,3 +49,10 @@ To create a production build, use yarn build.
 Paste one of the urls in your browser i.e. `http://localhost:3000/`
 
 You should be able to see the chat client
+
+### I didn't have time to
+- Handle websockets via sagas
+- Add a linter
+- Use flow 
+- Create a fancy design
+- Create automatic port on websocket server
