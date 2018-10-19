@@ -35,13 +35,21 @@ html, body {
       padding: 10px;
       border: #eee 1px solid;
       background-color: #fff;
-      .messages-list-container {
+      .messages-container-top {
         flex: .8;
         flex-grow: 1;
         height: 0px;
       }
-      .new-message-container {
+      .messages-container-bot {
         flex: .2;
+        display: flex;
+        flex-direction: column;
+        .typing-container {
+          flex: .1;
+        }
+        .new-message-container {
+          flex: .9;
+        }
       }
     }
   }

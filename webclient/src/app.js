@@ -1,61 +1,109 @@
 import React, { Component } from 'react';
-import { MessageList, UserList, NewMessage, ShouldMessageListChangedWrapper } from './components';
+import {
+  MessageList,
+  UserList,
+  NewMessage,
+  ShouldMessageListChangedWrapper
+} from './components';
 import { ChatClient, MESSAGE_TYPE } from './models/chat-client'
 
 import './app.scss';
-
 
 const WrappedMessageList = ShouldMessageListChangedWrapper(MessageList);
 
 class App extends Component {
   chatClient;
-  username;
-  timer;
 
   constructor(props) {
     super(props);
     this.state = {
       messages: [],
       users: [],
-      isTyping: false,
+      username: '',
+      typing: {
+        show: false,
+        user: []
+      },
     };
   }
   componentDidMount() {
     this.chatClient = new ChatClient('ws://localhost:1337');
-    this.chatClient.subcribe(this.onChatClientMessageReceived.bind(this));
+    this.chatClient.subcribe(this._onChatClientMessageReceived.bind(this));
   }
-  addMessage(message) {
+
+  /**
+    * Add message
+    * @param {object} message
+    * @private
+   */
+  _addMessage(message) {
     this.setState((prevState, props) => {
       const messages = [...prevState.messages];
       messages.push(message);
       return {messages};
     });
   }
-  updateUsers(users) {
+
+  /**
+    * Update users list in state
+    * @param {Array<string>} users
+    * @private
+   */
+  _updateUsers(users) {
     this.setState({users});
   }
 
-  onChatClientMessageReceived(message) {
+  /**
+    * Update users list in state
+    * @param {Array<string>} users
+    * @private
+   */
+  _updateTyping(user) {
+
+    this.setState((prevState, props) => {
+      const typing = {
+        show: true,
+        users: [],
+      };
+      return {typing};
+    });
+  }
+  /**
+    * handles new message from websocket
+    * @param {object} message
+    * @private
+   */
+  _onChatClientMessageReceived(message) {
     switch(message.type) {
       case MESSAGE_TYPE.WELCOME:
-        this.username = message.username;
+        this.setState({username: message.username});
         break;
       case MESSAGE_TYPE.TYPING:
-        this.setState({isTyping: true});
+      //  this._updateTyping(message.username);
         break;
       case MESSAGE_TYPE.MESSAGE:
-        this.addMessage(message);
+        this._addMessage(message);
         break;
       case MESSAGE_TYPE.USER_LIST:
-        this.updateUsers(message.users);
+        this._updateUsers(message.users);
         break;
       default:
     }
   }
-  sendTyping() {
+
+  /**
+    * Send typing indicator
+    * @private
+   */
+  _sendTyping() {
     this.chatClient.sendTyping();
   }
-  sendMessage(message) {
+
+  /**
+    * Send message through websocket
+    * @private
+   */
+  _sendMessage(message) {
     this.chatClient.sendMessage(message);
   }
 
@@ -64,19 +112,22 @@ class App extends Component {
       <div className='app'>
         <div className='webchat'>
           <div className='messages-container'>
-            <div className='messages-list-container'>
-              <WrappedMessageList username={this.username} messages={this.state.messages}>
+            <div className='messages-container-top'>
+              <WrappedMessageList username={this.state.username} messages={this.state.messages}>
               </WrappedMessageList>
             </div>
-            <div className='new-message-container'>
-              <NewMessage
-                onSend={this.sendMessage.bind(this)}
-                onTyping={this.sendTyping.bind(this)}>
-              </NewMessage>
+            <div className='messages-container-bot'>
+              <div className='typing-container'>User is typing...</div>
+              <div className='new-message-container'>
+                <NewMessage
+                  onSend={this._sendMessage.bind(this)}
+                  onTyping={this._sendTyping.bind(this)}>
+                </NewMessage>
+              </div>
             </div>
           </div>
           <div className='users-list-container'>
-            <UserList users={this.state.users}></UserList>
+            <UserList username={this.state.username} users={this.state.users}></UserList>
           </div>
         </div>
       </div>
