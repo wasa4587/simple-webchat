@@ -54,10 +54,3 @@ You should be able to see the chat client
 
 Open a new browser tab to log in as new user
 
-### I didn't have time to
-- Add a linter
-- Use flow 
-- Create a fancy design
-- Create automatic port on websocket server
-- Validate errors
-- Validate structure between messages are correct
