@@ -44,6 +44,7 @@ export function App(props) {
             </div>
             <div className='new-message-container'>
               <NewMessage
+                disabled={!props.connected}
                 onSend={props.wsSendMessage}
                 onTyping={props.wsSendTyping}>
               </NewMessage>

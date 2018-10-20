@@ -10,7 +10,7 @@ export const MESSAGE_TYPE = {
   WELCOME: 'welcome',
   USER_LIST: 'user_list',
 }
-
+const SYSTEM_USER = 'system';
 const TYPING_TIMEOUT = 3000;
 
 /**
@@ -66,9 +66,14 @@ function initWebsocket(serverUrl) {
     ws.onclose = (event) => {
       return emitter(END);
     }
-    // unsubscribe function
+
     return () => {
-      console.log('Socket off')
+      const disconnectMessage = {
+        type: MESSAGE_TYPE.MESSAGE,
+        text: 'You has been disconnected from the server.',
+        username: SYSTEM_USER,
+      };
+      return emitter({ type: ACTIONS.WS_DISCONNECT, message: disconnectMessage});
     }
   })
 }

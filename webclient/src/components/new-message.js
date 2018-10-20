@@ -13,8 +13,8 @@ export const NewMessage = props => {
   };
 
   const handleSubmit = event => {
-      event.preventDefault();
-      send();
+    event.preventDefault();
+    send();
   }
   const handleCtrlEnter = event => {
     if (event.ctrlKey && event.keyCode === 13) {
@@ -29,9 +29,10 @@ export const NewMessage = props => {
           type="text"
           placeholder='Type your message'
           ref={message => messageInput = message}
+          disabled={props.disabled}
           onKeyPress={props.onTyping}
           onKeyDown={handleCtrlEnter}/>
-        <button type="submit">Send</button>
+        <button type="submit" disabled={props.disabled}>Send</button>
       </form>
     </div>
   );
